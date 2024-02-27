@@ -1,7 +1,9 @@
 require('dotenv').config()
 const { Sequelize, DataTypes, Model } = require('sequelize')
 const express = require('express')
+
 const app = express()
+app.use(express.json())
 
 const sequelize = new Sequelize(process.env.DATABASE_URL)
 
@@ -36,6 +38,13 @@ app.get('/api/notes', async (req, res) => {
   const notes = await Note.findAll()
   res.json(notes)
 })
+
+app.post('/api/notes', async (req, res) => {
+  console.log(req.body)
+  const note = await Note.create(req.body)
+  res.json(note)
+})
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
