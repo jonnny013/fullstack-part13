@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "proxy": "flyctl proxy 5432 -a jon-love-part13-db"
+    "proxy": "flyctl proxy 5432 -a jon-love-part13-db",
+    "psql": "fly postgres connect -a jon-love-part13-db"
   },
   "author": "Jon Love",
   "license": "ISC",
