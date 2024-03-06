@@ -7,6 +7,9 @@ const errorHandler = (error, request, response, next) => {
   if (error.message === 'User not found') {
     return response.status(400).send({error: 'User not found'})
   }
+  if (error.message === 'Blog not found') {
+    return response.status(400).send({ error: 'Blog not found' })
+  }
   next(error)
 }
 

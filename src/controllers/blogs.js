@@ -4,7 +4,7 @@ const {Blog} = require('../models')
 
 const blogFinder = async (req, res, next) => {
   req.blog = await Blog.findByPk(req.params.id)
-  if (!req.blog) throw Error("User not found")
+  if (!req.blog) throw Error("Blog not found")
   next()
 }
 
