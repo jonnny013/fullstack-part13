@@ -13,6 +13,11 @@ const errorHandler = (error, request, response, next) => {
   if (error.message === 'Blog not found') {
     return response.status(400).send({ error: 'Blog not found' })
   }
+  if (/Validation isEmail on username failed/.test(error.message)) {
+    return response.status(400).send({
+      error: 'Please provide an email as your username',
+    })
+  }
   next(error)
 }
 
