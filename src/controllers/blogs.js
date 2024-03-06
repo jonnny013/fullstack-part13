@@ -3,7 +3,12 @@ const {Blog, User} = require('../models')
 const {tokenExtractor} = require('../util/middleware')
 
 const blogFinder = async (req, res, next) => {
-  req.blog = await Blog.findByPk(req.params.id)
+  req.blog = await Blog.findByPk(req.params.id, {
+    include: {
+      model: User,
+      attributes: ['name'],
+    },
+  })
   if (!req.blog) throw Error("Blog not found")
   next()
 }
@@ -39,6 +44,11 @@ router.put('/:id', tokenExtractor, blogFinder, async (req, res) => {
 
 router.delete('/:id', tokenExtractor, blogFinder, async (req, res) => {
     console.log(req.blog.toJSON())
+    
+    const user = await User.findByPk(req.decodedToken.id)
+    if (user.id !== req.blog.userId) {
+      return res.status(403).send("Restricted access")
+    }
     await req.blog.destroy()
     res.status(200).json('Deleted')
 })

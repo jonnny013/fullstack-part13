@@ -3,7 +3,13 @@ const router = require('express').Router()
 const { User, Blog } = require('../models')
 
 const userFinder = async (req, res, next) => {
-  req.user = await User.findOne({where: {username: req.params.username}})
+  req.user = await User.findOne({
+    where: { username: req.params.username },
+    include: {
+      model: Blog,
+      attributes: { exclude: ['userId'] },
+    },
+  })
   if (!req.user) throw Error('User not found')
   next()
 }
