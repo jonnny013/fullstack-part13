@@ -16,8 +16,17 @@ const errorHandler = (error, request, response, next) => {
   if (/Validation isEmail on username failed/.test(error.message)) {
     return response.status(400).send({
       error: 'Please provide an email as your username',
+    })}
+  if (/Validation max on year failed/.test(error.message)) {
+    return response.status(400).send({
+      error: 'Year should not be in the future',
     })
   }
+    if (/Validation min on year failed/.test(error.message)) {
+      return response.status(400).send({
+        error: 'Year should not be earlier than 1991',
+      })
+    }
   next(error)
 }
 
