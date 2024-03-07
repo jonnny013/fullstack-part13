@@ -8,7 +8,8 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "proxy": "flyctl proxy 5432 -a jon-love-part13-db",
-    "psql": "fly postgres connect -a jon-love-part13-db"
+    "psql": "fly postgres connect -a jon-love-part13-db",
+    "migration:down": "node util/rollback.js"
   },
   "author": "Jon Love",
   "license": "ISC",
