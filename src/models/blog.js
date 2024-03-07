@@ -28,7 +28,6 @@ Blog.init(
   },
   {
     sequelize,
-    timestamps: false,
     modelName: 'blogs',
   }
 )
