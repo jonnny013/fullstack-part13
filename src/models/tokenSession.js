@@ -13,7 +13,7 @@ Sessions.init(
     },
     token: {
       type: DataTypes.STRING,
-      defaultValue: true,
+      allowNull: false
     },
     userId: {
       type: DataTypes.INTEGER,
