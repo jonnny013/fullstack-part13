@@ -2,9 +2,9 @@ const { Model, DataTypes } = require('sequelize')
 
 const { sequelize } = require('../util/db')
 
-class Sessions extends Model {}
+class Session extends Model {}
 
-Sessions.init(
+Session.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -34,4 +34,4 @@ Sessions.init(
   }
 )
 
-module.exports = Sessions
+module.exports = Session

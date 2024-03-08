@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {SECRET} = require('./config')
+const { SECRET } = require('./config')
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
@@ -8,7 +8,7 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ error: 'malformatted id' })
   }
   if (error.message === 'User not found') {
-    return response.status(400).send({error: 'User not found'})
+    return response.status(400).send({ error: 'User not found' })
   }
   if (error.message === 'Blog not found') {
     return response.status(400).send({ error: 'Blog not found' })
@@ -16,17 +16,23 @@ const errorHandler = (error, request, response, next) => {
   if (/Validation isEmail on username failed/.test(error.message)) {
     return response.status(400).send({
       error: 'Please provide an email as your username',
-    })}
+    })
+  }
   if (/Validation max on year failed/.test(error.message)) {
     return response.status(400).send({
       error: 'Year should not be in the future',
     })
   }
-    if (/Validation min on year failed/.test(error.message)) {
-      return response.status(400).send({
-        error: 'Year should not be earlier than 1991',
-      })
-    }
+  if (/Validation min on year failed/.test(error.message)) {
+    return response.status(400).send({
+      error: 'Year should not be earlier than 1991',
+    })
+  }
+  if (error.name === 'TokenExpiredError') {
+    return response.status(401).json({
+      error: 'token expired',
+    })
+  }
   next(error)
 }
 
@@ -44,4 +50,4 @@ const tokenExtractor = (req, res, next) => {
   next()
 }
 
-module.exports = {errorHandler, tokenExtractor}
+module.exports = { errorHandler, tokenExtractor }
