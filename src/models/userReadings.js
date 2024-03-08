@@ -21,10 +21,6 @@ UserReadings.init(
       allowNull: false,
       references: { model: 'readingList', key: 'id' },
     },
-    unread: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
   },
   {
     sequelize,
