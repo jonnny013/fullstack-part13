@@ -11,16 +11,22 @@ ReadingList.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    unread: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: 'users', key: 'id' },
+    },
     blogId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: 'blogs', key: 'id' },
     },
-    unread: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    }
   },
+
   {
     sequelize,
     underscored: true,

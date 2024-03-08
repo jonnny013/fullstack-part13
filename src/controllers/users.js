@@ -5,15 +5,17 @@ const { User, Blog, ReadingList } = require('../models')
 const userFinder = async (req, res, next) => {
   req.user = await User.findOne({
     where: { username: req.params.username },
-    include: [{
-      model: Blog,
-      attributes: { exclude: ['userId'] },
-    },
-    {
-      model: ReadingList,
-      attributes: {exclude: ['userId']}
-    }
-  ]
+    include: [
+      {
+        model: Blog,
+        attributes: { exclude: ['userId'] },
+      },
+      {
+        model: Blog,
+        as: 'readings',
+        attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
+      },
+    ],
   })
   if (!req.user) throw Error('User not found')
   next()
@@ -49,7 +51,7 @@ router.post('/', async (req, res) => {
 router.put('/:username', userFinder, async (req, res) => {
   console.log('current: ', req.user.username, 'new: ', req.body.username)
   req.user.username = req.body.username
-  
+
   await req.user.save()
   res.json(req.user)
 })
