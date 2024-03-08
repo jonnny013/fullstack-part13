@@ -1,10 +1,8 @@
 const router = require('express').Router()
-
 const { User, Blog, ReadingList } = require('../models')
 
 const userFinder = async (req, res, next) => {
-  req.user = await User.findOne({
-    where: { username: req.params.username },
+  req.user = await User.findByPk(req.params.id, {
     include: [
       {
         model: Blog,
@@ -41,9 +39,29 @@ router.get('/', async (req, res) => {
   res.json(users)
 })
 
-router.get('/:username', userFinder, async (req, res) => {
-  console.log(req.user.toJSON())
-  res.json(req.user)
+router.get('/:id', async (req, res) => {
+
+  const user = await User.findByPk(req.params.id, {
+    include: [
+      {
+        model: Blog,
+        attributes: { exclude: ['userId'] },
+      },
+      {
+        model: ReadingList,
+        attributes: { exclude: ['userId', 'blogId'] },
+        include: {
+          model: Blog,
+          attributes: { exclude: ['createdAt', 'updatedAt', 'userId'] },
+        },
+        where: req.query.read ? { unread: req.query.read } : {},
+        required: false
+      },
+    ],
+  })
+  if (!user) throw Error('User not found')
+
+  res.json(user)
 })
 
 router.post('/', async (req, res) => {
@@ -51,7 +69,7 @@ router.post('/', async (req, res) => {
   return res.json(user)
 })
 
-router.put('/:username', userFinder, async (req, res) => {
+router.put('/:id', userFinder, async (req, res) => {
   console.log('current: ', req.user.username, 'new: ', req.body.username)
   req.user.username = req.body.username
 
