@@ -11,9 +11,12 @@ const userFinder = async (req, res, next) => {
         attributes: { exclude: ['userId'] },
       },
       {
-        model: Blog,
-        as: 'readings',
-        attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
+        model: ReadingList,
+        attributes: { exclude: ['userId', 'blogId'] },
+        include: {
+          model: Blog,
+          attributes: {exclude: ['createdAt', 'updatedAt', 'userId']}
+          },
       },
     ],
   })
