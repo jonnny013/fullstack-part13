@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { SECRET } = require('./config')
+const Session = require('../models/tokenSession')
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
@@ -36,11 +37,18 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-const tokenExtractor = (req, res, next) => {
+const tokenExtractor = async (req, res, next) => {
   const authorization = req.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     try {
       req.decodedToken = jwt.verify(authorization.substring(7), SECRET)
+      const storedToken = await Session.findByPk(req.decodedToken.id)
+      if (!storedToken) {
+        return res.status(401).json({ error: 'token invalid' })
+      } else if (Date.now() > storedToken.expiration) {
+        storedToken.destroy()
+        return res.status(401).json({ error: 'token expired' })
+      }
     } catch {
       return res.status(401).json({ error: 'token invalid' })
     }
